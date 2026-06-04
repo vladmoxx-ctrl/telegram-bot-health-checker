@@ -1,0 +1,2 @@
+# No third-party runtime dependencies are required.
+# The checker uses Python standard library modules only.

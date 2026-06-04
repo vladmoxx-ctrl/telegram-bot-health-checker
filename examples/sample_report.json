@@ -1,0 +1,21 @@
+{
+  "status": "OK",
+  "summary": "All critical checks passed.",
+  "checks": [
+    {
+      "name": "token",
+      "status": "OK",
+      "message": "Bot token is valid. Bot: @example_bot"
+    },
+    {
+      "name": "webhook",
+      "status": "OK",
+      "message": "No webhook is configured. Polling can be used."
+    },
+    {
+      "name": "admin_message",
+      "status": "OK",
+      "message": "Test message sent to admin chat."
+    }
+  ]
+}
