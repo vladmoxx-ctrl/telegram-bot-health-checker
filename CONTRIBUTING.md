@@ -29,6 +29,7 @@ The following features will not be accepted:
 ## Development
 
 ```bash
+pip install -e .
 python -m compileall src tests
 python -m unittest discover -s tests
 python -m telegram_bot_health_checker --help

@@ -5,6 +5,8 @@ import json
 from typing import Any
 from urllib import error, parse, request
 
+from . import __version__
+
 
 class TelegramApiError(RuntimeError):
     pass
@@ -22,7 +24,7 @@ class TelegramBotApiClient:
     def call(self, method: str, data: dict[str, Any] | None = None) -> dict[str, Any]:
         url = self.base_url + method
         payload = None
-        headers = {"User-Agent": "telegram-bot-health-checker/0.1.0"}
+        headers = {"User-Agent": f"telegram-bot-health-checker/{__version__}"}
 
         if data is not None:
             payload = parse.urlencode(data).encode("utf-8")

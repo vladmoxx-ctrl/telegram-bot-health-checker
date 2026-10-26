@@ -39,6 +39,23 @@ def load_dotenv(path: str | Path | None) -> dict[str, str]:
     return values
 
 
+# Accepted variable names, preferred first. The extra names let the checker read
+# .env files of bots that use them (for example TELEGRAM_CHAT_ID) and files made
+# from the 0.1.0 .env.example, which used BOT_TOKEN and ADMIN_CHAT_ID.
+TOKEN_KEYS = ("TELEGRAM_BOT_TOKEN", "BOT_TOKEN")
+ADMIN_CHAT_ID_KEYS = ("TELEGRAM_ADMIN_CHAT_ID", "TELEGRAM_CHAT_ID", "ADMIN_CHAT_ID")
+
+
+def lookup(env_values: dict[str, str], keys: tuple[str, ...]) -> str:
+    """First non-empty value: the .env file wins over the process environment."""
+    for source in (env_values, os.environ):
+        for key in keys:
+            value = (source.get(key) or "").strip()
+            if value:
+                return value
+    return ""
+
+
 def build_config(
     *,
     env_path: str | Path | None,
@@ -51,19 +68,9 @@ def build_config(
 ) -> CheckerConfig:
     env_values = load_dotenv(env_path)
 
-    resolved_token = (
-        token
-        or env_values.get("TELEGRAM_BOT_TOKEN")
-        or os.getenv("TELEGRAM_BOT_TOKEN")
-        or ""
-    ).strip()
+    resolved_token = (token or lookup(env_values, TOKEN_KEYS)).strip()
 
-    resolved_admin_chat_id = (
-        admin_chat_id
-        or env_values.get("TELEGRAM_ADMIN_CHAT_ID")
-        or os.getenv("TELEGRAM_ADMIN_CHAT_ID")
-        or ""
-    ).strip() or None
+    resolved_admin_chat_id = (admin_chat_id or lookup(env_values, ADMIN_CHAT_ID_KEYS)).strip() or None
 
     return CheckerConfig(
         token=resolved_token,

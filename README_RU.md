@@ -23,8 +23,21 @@
 git clone https://github.com/YOUR_USERNAME/telegram-bot-health-checker.git
 cd telegram-bot-health-checker
 cp .env.example .env
+pip install .
 python -m telegram_bot_health_checker --env .env
 ```
+
+Без установки: `PYTHONPATH=src python -m telegram_bot_health_checker --env .env`.
+
+В `.env` укажите `TELEGRAM_BOT_TOKEN` и (необязательно) `TELEGRAM_ADMIN_CHAT_ID`. Понимаются и другие частые имена: `BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `ADMIN_CHAT_ID` — можно проверить бота по его собственному `.env`:
+
+```bash
+python -m telegram_bot_health_checker --env /путь/к/боту/.env --no-admin-message
+```
+
+## Перед запуском бота с long polling
+
+Бот, который принимает команды через `getUpdates`, не работает, пока у него установлен webhook, и один бот нельзя опрашивать двумя программами. Проверка `webhook` предупреждает о webhook и его последних ошибках; `--delete-webhook` удаляет webhook.
 
 На Windows можно запустить:
 

@@ -44,11 +44,20 @@ On Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-### 3. Run the checker
+### 3. Install and run the checker
 
 ```bash
+pip install .
 python -m telegram_bot_health_checker --env .env
 ```
+
+Without installing, point Python at the `src` folder:
+
+```bash
+PYTHONPATH=src python -m telegram_bot_health_checker --env .env
+```
+
+On Windows, `scripts\run_windows.bat` does this for you.
 
 Or without a `.env` file:
 
@@ -101,6 +110,16 @@ TELEGRAM_ADMIN_CHAT_ID=123456789
 
 `TELEGRAM_ADMIN_CHAT_ID` is optional. If it is not set, the checker will skip the admin notification test.
 
+The checker also understands `.env` files of bots that use other common names: `BOT_TOKEN` for the token and `TELEGRAM_CHAT_ID` or `ADMIN_CHAT_ID` for the chat. So you can point it at your bot's own `.env` (add `--no-admin-message` if you do not want a test message):
+
+```bash
+python -m telegram_bot_health_checker --env /path/to/your-bot/.env --no-admin-message
+```
+
+## Before running a bot with long polling
+
+A bot that reads commands with `getUpdates` (long polling) cannot work while a webhook is set, and two programs must not poll the same bot. The `webhook` check warns about a configured webhook or a recent webhook error. `--delete-webhook` removes the webhook so polling can start.
+
 ## Exit codes
 
 - `0` — all critical checks passed
@@ -121,7 +140,7 @@ Never commit `.env`, tokens, chat IDs, session files, or private logs. See [SECU
 
 ## Roadmap
 
-- GitHub Actions example for scheduled checks
+- GitHub Actions example for scheduled checks (tests already run in CI)
 - Docker image
 - HTML report
 - Optional Prometheus-compatible output
